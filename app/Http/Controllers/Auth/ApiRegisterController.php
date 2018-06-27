@@ -8,12 +8,15 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class ApiRegisterController extends Controller
 {
 
     public function register(Request $request)
     {
+        Log::channel('daily')->notice('Try register from IP:'.request()->ip());
+
         $validator = $this->validator($request->input());
         $errors = $validator->errors()->all();
         if (!empty($errors)) {
@@ -22,6 +25,7 @@ class ApiRegisterController extends Controller
 
         $user = $this->create($request->input());
         $profile = $user->only(['email', 'name', 'id', 'api_token']);
+        Log::channel('daily')->notice('Success register from IP:'.request()->ip());
         return response($profile, Response::HTTP_OK);
     }
 

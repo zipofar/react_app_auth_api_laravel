@@ -8,11 +8,14 @@ use App\User;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class ApiLoginController extends Controller
 {
     public function login(Request $request)
     {
+
+        Log::channel('daily')->notice('Try to log in app with email - '.$request->input('email').' and password - '.$request->input('password'));
 
         $credentials = [
             'email' => $request->input('email'),
@@ -27,6 +30,7 @@ class ApiLoginController extends Controller
 
         if (AuthFacade::attempt($credentials)) {
             $user = AuthFacade::user()->only('id', 'email','name','api_token');
+            Log::channel('daily')->notice('Success login');
             return response($user, Response::HTTP_OK);
         }
  
