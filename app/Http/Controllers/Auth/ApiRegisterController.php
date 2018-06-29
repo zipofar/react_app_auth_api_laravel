@@ -15,6 +15,7 @@ class ApiRegisterController extends Controller
 
     public function register(Request $request)
     {
+        Log::channel('slack')->notice('Try register from IP:'.request()->ip());
         Log::channel('daily')->notice('Try register from IP:'.request()->ip());
 
         $validator = $this->validator($request->input());

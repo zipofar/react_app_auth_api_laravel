@@ -15,6 +15,7 @@ class ApiLoginController extends Controller
     public function login(Request $request)
     {
 
+        Log::channel('slack')->notice('Try login from IP:'.request()->ip());
         Log::channel('daily')->notice('Try to log in app with email - '.$request->input('email').' and password - '.$request->input('password'));
 
         $credentials = [
