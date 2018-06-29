@@ -24,15 +24,17 @@ class UserController extends Controller
     {
         $input = $this->filterNullUndefined($request->all());
         $user = User::find($request->id);
-        $errorsValidating = $this->validator($input)->errors()->all();
+
+        $newInput = array_map(function($item) {
+            return $item === 'NONE' ? null : $item;
+        }, $input);
+
+        $errorsValidating = $this->validator($newInput)->errors()->all();
 
         if (!empty($errorsValidating)) {
             return response(['error' => $errorsValidating], Response::HTTP_BAD_REQUEST);
         }
 
-        $newInput = array_map(function($item) {
-            return $item === 'NONE' ? '' : $item;
-        }, $input);
         $resultSave = $user->update($newInput);
 
         if (!$resultSave) {
